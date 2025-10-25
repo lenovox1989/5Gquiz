@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green 5G Quiz</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #quiz-wrapper {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 650px;
+            padding: 30px;
+        }
+        h1 {
+            color: #00796b; /* Green from the white paper */
+            text-align: center;
+            margin-top: 0;
+        }
+        .quiz-question {
+            margin-top: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        .quiz-options {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 15px;
+        }
+        .quiz-options li {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-options li:hover {
+            background-color: #f0f0f0;
+        }
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+        #submit-btn {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+            transition: background-color 0.2s;
+        }
+        #submit-btn:hover {
+            background-color: #004d40;
+        }
+        #results-container {
+            text-align: center;
+            font-size: 1.25em;
+            font-weight: 700;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-wrapper">
+        <h1>Green 5G White Paper Quiz</h1>
+        <div id="quiz-container"></div>
+        <button id="submit-btn">Submit Quiz</button>
+        <div id="results-container"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "1. Why does the white paper argue that the traditional \"Energy efficiency 1.0\" metric is insufficient?",
+                options: [
+                    "It only measures energy consumption during peak hours.",
+                    "It doesn't account for user experience, which can be poor even on \"efficient\" networks.",
+                    "It doesn't apply to 5G technology, only 4G.",
+                    "It is too difficult to calculate."
+                ],
+                answer: "It doesn't account for user experience, which can be poor even on \"efficient\" networks."
+            },
+            {
+                question: "2. What is the key component added to the new \"Energy efficiency 2.0\" metric?",
+                options: [
+                    "User Experience",
+                    "Cost of hardware",
+                    "Number of connected devices",
+                    "Carbon footprint of manufacturing"
+                ],
+                answer: "User Experience"
+            },
+            {
+                question: "3. \"Site Simplification\" aims to reduce energy consumption primarily by...",
+                options: [
+                    "Using more antennas on each tower.",
+                    "Replacing copper wires with fiber optics.",
+                    "Eliminating equipment rooms and their associated air conditioning.",
+                    "Increasing the data speed for all users."
+                ],
+                answer: "Eliminating equipment rooms and their associated air conditioning."
+            },
+            {
+                question: "4. How does \"Network Intelligence\" contribute to a Green 5G network?",
+                options: [
+                    "By automatically putting network resources to sleep during off-peak hours and waking them when needed.",
+                    "By developing new, recyclable materials for network hardware.",
+                    "By allowing one module to support multiple radio bands.",
+                    "By simplifying the physical design of a cell site."
+                ],
+                answer: "By automatically putting network resources to sleep during off-peak hours and waking them when needed."
+            },
+            {
+                question: "5. What is the goal of \"Full-Lifecycle Environment-Friendliness\"?",
+                options: [
+                    "To ensure the network is fast enough for all users.",
+                    "To minimize dependence on natural resources through recycling and environment-friendly design.",
+                    "To ensure all 4G networks are switched to 5G by 2030.",
+                    "To lower the cost of data plans for consumers."
+                ],
+                answer: "To minimize dependence on natural resources through recycling and environment-friendly design."
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const submitButton = document.getElementById('submit-btn');
+        const resultsContainer = document.getElementById('results-container');
+
+        function buildQuiz() {
+            const output = [];
+            quizData.forEach((currentQuestion, questionNumber) => {
+                const options = [];
+                currentQuestion.options.forEach(option => {
+                    options.push(
+                        `<li>
+                            <label>
+                                <input type="radio" name="question${questionNumber}" value="${option}">
+                                ${option}
+                            </label>
+                        </li>`
+                    );
+                });
+                output.push(
+                    `<div class="quiz-question">${currentQuestion.question}</div>
+                     <ul class="quiz-options">${options.join('')}</ul>`
+                );
+            });
+            quizContainer.innerHTML = output.join('');
+        }
+
+        function showResults() {
+            const answerContainers = quizContainer.querySelectorAll('.quiz-options');
+            let numCorrect = 0;
+            quizData.forEach((currentQuestion, questionNumber) => {
+                const answerContainer = answerContainers[questionNumber];
