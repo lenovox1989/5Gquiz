@@ -94,7 +94,7 @@
     <div id="quiz-wrapper">
         <h1>Green 5G White Paper Quiz</h1>
         <div id="quiz-container"></div>
-        <button id="submit-btn">Submit Quiz</button>
+        <button id="submit-btn" type="button">Submit Quiz</button>
         <div id="results-container"></div>
     </div>
 
@@ -183,3 +183,28 @@
             let numCorrect = 0;
             quizData.forEach((currentQuestion, questionNumber) => {
                 const answerContainer = answerContainers[questionNumber];
+                const selector = `input[name=question${questionNumber}]:checked`;
+                const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+                if (userAnswer === currentQuestion.answer) {
+                    numCorrect++;
+                }
+            });
+
+            resultsContainer.innerHTML = `You got ${numCorrect} out of ${quizData.length} correct.`;
+            if (numCorrect === quizData.length) {
+                resultsContainer.className = 'correct';
+            } else {
+                resultsContainer.className = 'incorrect';
+            }
+
+            // Scroll to the results container to ensure visibility
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+    </script>
+
+</body>
+</html>
